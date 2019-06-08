@@ -14,6 +14,9 @@ yarn
 ```sh
 
 
+# add react-native-firebase to existing project
+yarn add @react-native-firebase/app
+
 # app.js of a sample firestore
 https://firebase.google.com/docs/firestore/query-data/queries
 https://github.com/iamshaunjp/firebase-firestore-playlist/tree/lesson-9

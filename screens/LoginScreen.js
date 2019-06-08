@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
-import firebase from 'firebase';
+import firebase from '../Firebase';
 
 class LoginScreen extends Component {
+  constructor(props) {
+    super(props);
+  }
 
   isUserEqual = (googleUser, firebaseUser) => {
     if (firebaseUser) {
@@ -39,25 +42,31 @@ class LoginScreen extends Component {
             .auth()
             .signInAndRetrieveDataWithCredential(credential)
             .then(function(result) {
+              const { uid } = result.user;
+              const users = firebase.firestore().collection('users');
               console.log('user signed in ');
-              const db = firebase.firestore();
-              console.log('user signed in 1');
-              db.settings({ timestampsInSnapshots: true }); 
-              console.log('user signed in 2');
-              const timestamp = new Date().getDate();
-              console.log('user signed in 3');
+              const timestamp = Date.now();
               if (result.additionalUserInfo.isNewUser) {
                 console.log('is a new user');
-                db.collection('users').add({
+                const item = {
                   loginType : 'google',
                   idToken: googleUser.idToken,
                   gmail: result.user.email,
                   profilePicture: result.additionalUserInfo.profile.picture,
                   firstName: result.additionalUserInfo.profile.given_name,
                   lastName: result.additionalUserInfo.profile.family_name,
+                  createdOn: timestamp,
                   lastLogin: timestamp,
-                  createdOn: timestamp
-                });
+                };
+                console.log(result);
+                // users.add(item)
+                users.doc(uid).set(item)
+                .then(status => {
+                  console.log('added to db: ', status);
+                }).catch(err => {
+                  console.log('err: ' + err);
+                })
+                console.log('is a new user 2');
                 // firebase
                 //   .database()
                 //   .ref('/users/' + result.user.uid)
@@ -73,9 +82,13 @@ class LoginScreen extends Component {
                 //   });
               } else {
                 console.log('is not a new user');
-                db.collection('users').where('loginType', '==', 'google').where('idToken', '==', googleUser.idToken).update({
+                users.doc(uid).update({
                   lastLogin: timestamp,
-                });
+                }).then(result => {
+                  console.log(result);
+                }).catch(err => {
+                  console.log('err: ' + err);
+                })
                 // firebase
                 //   .database()
                 //   .ref('/users/' + result.user.uid)
