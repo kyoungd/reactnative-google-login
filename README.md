@@ -10,27 +10,32 @@
 yarn 
 ```
 
-### Configure config.js - Add your firebase app config keys
 ```sh
+yarn start
 
+### Configure config.js - Add your firebase app config keys
+### get this from firebase.
+export const firebaseConfig = {
+  apiKey: "",
+  authDomain: "",
+  databaseURL: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: ""
+};
 
-# add react-native-firebase to existing project
-yarn add @react-native-firebase/app
+### Configure clientConfig.js - add your google app api key
+export const clientConfig = {
+  androidClientId: '',
+  behavior: 'web',
+  iosClientId: '',
+  scopes: ['profile', 'email']
+}
 
 # app.js of a sample firestore
 https://firebase.google.com/docs/firestore/query-data/queries
 https://github.com/iamshaunjp/firebase-firestore-playlist/tree/lesson-9
-
-# initialize database
-var config = {
-    apiKey: "AIzaSyBrItE-kYM4dU0kaft7WYjb3749lCv42uA", ...
-};
-firebase.initializeApp(config);
-const db = firebase.firestore();
-db.settings({ timestampsInSnapshots: true }); 
-
-# id of a document
-li.setAttribute('data-id', doc.id);
 
 // deleting data
 cross.addEventListener('click', (e) => {
